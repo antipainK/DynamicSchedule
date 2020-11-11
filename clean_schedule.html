@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Schedule</title>
+
+
+    <script type="text/javascript">
+
+        let soundOn = false;
+
+        function saveTheWebsite() {
+            document.getElementsByClassName('modder_window')[0].classList.add('hidden');
+            soundOn = false;
+
+            var htmlContent = ["<!DOCTYPE html>\n" + "<html lang=\"en\">\n" + document.getElementsByTagName("html")[0].innerHTML];
+            var blob = new Blob(htmlContent, {type: "text/html"});
+            var a = document.createElement("a");
+            a.href = URL.createObjectURL(blob);
+            a.download = "myOwnSchedule.html";
+            a.hidden = true;
+            document.body.appendChild(a);
+            a.innerHTML = "Download Website";
+            a.click();
+        }
+
+        async function changeSoundSettings(me){
+            soundOn = !soundOn;
+            if(soundOn){
+                me.classList.add("on");
+            }
+            else{
+                me.classList.remove("on");
+            }
+        }
+
+        const times = ["", "8:00 - 9:30 ", "9:35 - 11:05 ", "11:15 - 12:45 ", "12:50 - 14:20 ", "14:40 - 16:10 ", "16:15 - 17:45 ", "17:50 - 19:20 "];
+
+        async function createNewLesson(){
+            okienko = document.getElementsByClassName("modder_window")[0];
+            if(okienko.classList.contains("hidden")){
+                okienko.classList.remove("hidden");
+            }
+        }
+        
+        function clearEditorInputs(object){
+            object.querySelector('[name="name"]').value = "";
+            object.querySelector('[name="type"]').value = "";
+            object.querySelector('[name="person"]').value = "";
+            object.querySelector('[name="place1"]').value = "";
+            object.querySelector('[name="place2"]').value = "";
+            object.querySelector('[name="place3"]').value = "";
+            object.querySelector('[name="place4"]').value = "";
+            object.querySelector('[name="website1"]').value = "";
+            object.querySelector('[name="website2"]').value = "";
+            object.querySelector('[name="website3"]').value = "";
+            object.querySelector('[name="website4"]').value = "";
+            object.querySelector('[name="which_week"]').value = "";
+        }
+
+        async function loadTheLesson(){
+            var okienko_edycji = document.getElementsByClassName("modder_window")[0];
+            var wartosc_wyboru = okienko_edycji.getElementsByClassName("options")[0].value;
+            if(wartosc_wyboru !== "no"){
+                var lekcja = document.getElementsByClassName(wartosc_wyboru)[0];
+                var formularz_edycji = okienko_edycji.getElementsByClassName("editor_inputs")[0];
+                
+                clearEditorInputs(formularz_edycji);
+                
+                if(lekcja === undefined){
+                    okienko_edycji.getElementsByClassName("editor_wrapper")[0].innerHTML = "";
+                    return;
+                }
+                okienko_edycji.getElementsByClassName("editor_wrapper")[0].innerHTML = lekcja.outerHTML;
+                
+                formularz_edycji.querySelector('[name="name"]').value = lekcja.getElementsByClassName("name")[0].innerHTML.trim();
+                formularz_edycji.querySelector('[name="type"]').value = lekcja.getElementsByClassName("type")[0].innerHTML.trim();
+                formularz_edycji.querySelector('[name="person"]').value = lekcja.getElementsByClassName("person")[0].innerHTML.trim();
+
+                //var linki_i_inne = lekcja.getElementsByClassName("place")[0];
+                var lista_linkow = lekcja.getElementsByClassName("place")[0].innerHTML.trim().split("<br>")
+                for (var i=0; i<lista_linkow.length; i++){
+                    if(i>=4) break;
+                    var link = lista_linkow[i];
+                    if(link === "") continue;
+                    link_dzielony = link.trim().split(": ");
+                    if(link_dzielony.length < 2) alert("Error during loading in links" + link + " Lista linków : " + lista_linkow + " | " + lista_linkow.length);
+                    var nazwa = link_dzielony[0];
+                    var adres = "";
+                    if(link_dzielony[1] !== undefined){
+                        adres = link_dzielony[1].split('href="')[1].split('">')[0];
+                    }
+                    formularz_edycji.getElementsByClassName("place")[i].value = nazwa;
+                    formularz_edycji.getElementsByClassName("website")[i].value = adres;
+                }
+
+                var pasek_z_godzina = lekcja.getElementsByClassName("time")[0].innerHTML.trim().split(" ");
+                var pasek_do_wpisania = "";
+                for(var j=3; j<pasek_z_godzina.length; j++){
+                    pasek_do_wpisania += pasek_z_godzina[j] + " ";
+                }
+                formularz_edycji.querySelector('[name="which_week"]').value = pasek_do_wpisania.trim();
+            }
+        }
+
+        function deleteTheLesson(classname){
+            var do_usuniecia = document.getElementsByClassName("fullpage")[0].getElementsByClassName(classname)[0];
+            if(do_usuniecia !== undefined){
+                do_usuniecia.parentNode.removeChild(do_usuniecia);
+                deleteTheLesson(classname);
+            }
+        }
+
+        function deleteTheLessonSelected(){
+            deleteTheLesson(document.getElementsByClassName("modder_window")[0].getElementsByClassName("options")[0].value);
+        }
+
+        async function saveTheLesson(){
+            var lessonScope = document.getElementsByClassName("fullpage")[0];
+            var okienko_edycji = document.getElementsByClassName("modder_window")[0];
+            var formularz_edycji = okienko_edycji.getElementsByClassName("editor_inputs")[0];
+            var wartosc_wyboru = okienko_edycji.getElementsByClassName("options")[0].value;
+            if(wartosc_wyboru !== "no"){
+                deleteTheLesson(wartosc_wyboru);
+
+                var newLesson = '' +
+                    '<div class="work ' + wartosc_wyboru + '">\
+                    <div class="name">\
+                        ' + formularz_edycji.querySelector('[name="name"]').value + '\
+                    </div>\
+                    <div class="type">\
+                        '+formularz_edycji.querySelector('[name="type"]').value+'\
+                    </div>\
+                    <div class="person">\
+                        '+formularz_edycji.querySelector('[name="person"]').value+'\
+                    </div>\
+                    <div class="place">\
+                        ';
+                for(var k=0; k<4; k++){
+                    var temp_temp = formularz_edycji.getElementsByClassName("place")[k].value;
+                    if(temp_temp !== ""){
+                        newLesson += temp_temp + ": " + '<a target="_blank" href="' + formularz_edycji.getElementsByClassName("website")[k].value + '">' + formularz_edycji.getElementsByClassName("website")[k].value.replace(/(^\w+:|^)\/\//, '').substring(0,25) + '(...)' + '</a>' + "<br>";
+                    }
+                }
+                newLesson += '\
+                    </div>\
+                        <div class="time">\
+                            ' + times[wartosc_wyboru[wartosc_wyboru.length-1]] + formularz_edycji.querySelector('[name="which_week"]').value + '\
+                        </div>\
+                    </div>';
+
+                lessonScope.innerHTML += newLesson;
+            }
+
+
+        }
+
+        const notificationSound = new Audio("https://notificationsounds.com/storage/sounds/file-sounds-1142-inflicted.mp3");
+
+        async function checkTime() {
+            let currentDay;
+            let lessonToActivateName = null;
+            let currentTimeLocal;
+            let dayOfTheWeek;
+            let currentHour;
+            let currentMinute;
+            let lessonToDeactivateName;
+            let timeInMinutes;
+            let toErase;
+            let toActivate;
+            while (true) {
+                currentTimeLocal = new Date();
+                dayOfTheWeek = currentTimeLocal.getDay();
+
+                if (dayOfTheWeek === 0 || dayOfTheWeek === 6) {
+                    console.log("Activity checker going to sleep for " + 8 + " hours.");
+                    await new Promise(resolve => setTimeout(resolve, 28800000));
+                    continue;
+                }
+
+                currentHour = currentTimeLocal.getHours();
+                currentMinute = currentTimeLocal.getMinutes();
+
+                if (currentHour < 7 || currentHour >= 20) {
+                    console.log("Activity checker going to sleep for " + 1 + " hours.");
+                    await new Promise(resolve => setTimeout(resolve, 3600000));
+                    continue;
+                }
+
+                switch (dayOfTheWeek) {
+                    case 1:
+                        currentDay = "monday";
+                        break;
+                    case 2:
+                        currentDay = "tuesday";
+                        break;
+                    case 3:
+                        currentDay = "wednesday";
+                        break;
+                    case 4:
+                        currentDay = "thursday";
+                        break;
+                    case 5:
+                        currentDay = "friday";
+                        break;
+                    default:
+                        currentDay = "yikes";
+                        break;
+                }
+                if (currentDay === "yikes") break;
+
+                lessonToDeactivateName = lessonToActivateName;
+                lessonToActivateName = currentDay;
+                timeInMinutes = currentMinute + currentHour * 60;
+
+                if (timeInMinutes > 479) {
+                    if (timeInMinutes <= 570) {
+                        lessonToActivateName += "1";
+                    } else if (timeInMinutes <= 665) {
+                        lessonToActivateName += "2";
+                    } else if (timeInMinutes <= 765) {
+                        lessonToActivateName += "3";
+                    } else if (timeInMinutes <= 860) {
+                        lessonToActivateName += "4";
+                    } else if (timeInMinutes <= 970) {
+                        lessonToActivateName += "5";
+                    } else if (timeInMinutes <= 1065) {
+                        lessonToActivateName += "6";
+                    } else if (timeInMinutes <= 1160) {
+                        lessonToActivateName += "7";
+                    }
+                }
+
+                if (lessonToActivateName !== lessonToDeactivateName) {
+                    if (lessonToDeactivateName != null) {
+                        toErase = document.getElementsByClassName(lessonToDeactivateName)[0];
+                        if (toErase !== undefined) {
+                            toErase.classList.remove("active");
+                        }
+                    }
+
+                    toActivate = document.getElementsByClassName(lessonToActivateName);
+                    if (toActivate == null) {
+                        console.log("Activity checker going to sleep for " + 60 + " seconds.");
+                        await new Promise(resolve => setTimeout(resolve, 60000));
+                    } else {
+                        toActivate = toActivate[0];
+                        if (toActivate == null) {
+                            console.log("Activity checker going to sleep for " + 60 + " seconds.");
+                            await new Promise(resolve => setTimeout(resolve, 60000));
+                        } else {
+                            if(soundOn){
+                                notificationSound.play();
+                            }
+
+                            toActivate.classList.add("active");
+                        }
+                    }
+                }
+                console.log("Activity checker going to sleep for " + 15 + " seconds.");
+                await new Promise(resolve => setTimeout(resolve, 15000));
+            }
+        }
+        window.onload = checkTime;
+    </script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            font-family: "Roboto",serif;
+            color: #CCCACA;
+        }
+        a{
+            color: orange;
+        }
+        .fullpage{
+            padding: 1vmin 1vw;
+            width: calc( 100% - 2vw );
+            min-height: calc( 100vh - 2vmin );
+            background-color: #333;
+            color: #CCCACA;
+
+            display: inline-grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+            grid-template-rows: 30px repeat(7, 1fr);
+            grid-gap: 10px;
+
+            grid-template-areas:
+                "day day day day day"
+                "monday1 tuesday1 wednesday1 thursday1 friday1"
+                "monday2 tuesday2 wednesday2 thursday2 friday2"
+                "monday3 tuesday3 wednesday3 thursday3 friday3"
+                "monday4 tuesday4 wednesday4 thursday4 friday4"
+                "monday5 tuesday5 wednesday5 thursday5 friday5"
+                "monday6 tuesday6 wednesday6 thursday6 friday6"
+                "monday7 tuesday7 wednesday7 thursday7 friday7";
+
+        }
+        @media screen and (max-width: 1000px){
+            .fullpage{
+                width: calc( 166.6% - 2vw );
+            }
+        }
+        @media screen and (max-width: 600px){
+            .fullpage{
+                width: calc( 500% - 2vw );
+            }
+        }
+        .day{
+            align-self: center;
+            text-align: center;
+            width: 80%;
+            border-bottom: 2px solid orange;
+            padding-bottom: 2px;
+            place-self: center;
+            font-size: max( 1.25vw, 20px);
+            margin-bottom: 1vmin;
+        }
+        .work{
+            border-radius: 2px;
+            padding: 5px;
+            box-shadow: -3px -3px 4px rgba(255,255,255,0.3), 3px 3px 4px 3px rgba(0,0,0,0.3);
+
+            display: grid;
+            align-content: space-between;
+        }
+        .work.active{
+            box-shadow: 0 0 16px 2px rgba(255,154,22,0.8);
+        }
+
+        .work > .name{
+            font-size: max( 1.2vw, 24px );
+            text-align: center;
+        }
+        .work > .type{
+            font-size: max( 0.6vw, 12px);
+            text-align: center;
+            margin-bottom: 3px;
+        }
+        .work > .person{
+            font-size: max( 0.6vw, 12px);
+            text-align: right;
+        }
+        .work > .place{
+            margin-top: max( 1vh, 5px);
+            font-size: max( 0.6vw, 12px);
+        }
+        .work > .time{
+            font-size: max( 0.6vw, 12px );
+            margin-top: 2px;
+            text-align: center;
+        }
+
+        .work.active::after {
+            content: close-quote;
+            background-color: orange;
+            color: black;
+            border-radius: 4px;
+            padding: 1px;
+            overflow-x: hidden;
+
+            display: inline-grid;
+            width: 100%;
+        }
+
+        .sound_prompt{
+            display: block;
+            position: fixed;
+            top: 5px;
+            right: 5px;
+
+            color: rgba(0,0,0,0.5);
+            background: rgba(220,10,30,0.5);
+            transition: background-color 0.5s;
+            padding: 0.6vmin;
+            border-radius: 0.6vmin;
+
+            box-shadow: 0.3vmin -0.3vmin 1.2vmin black;
+            font-size: max( 1vw, 20px );
+
+            cursor: pointer;
+        }
+        .sound_prompt.on{
+            background: rgba(30,200,70,0.5);
+        }
+
+        .modify_plan{
+            display: block;
+            position: fixed;
+            bottom: 5px;
+            right: 5px;
+
+            color: rgba(0,0,0,0.5);
+            background: rgba(128, 128, 128, 0.5);
+            padding: 0.6vmin;
+            border-radius: 0.6vmin;
+
+            box-shadow: 0 0 0.5vmin rgba(128, 128, 128, 0.5);
+            font-size: max( 1vw, 20px );
+
+            cursor: pointer;
+        }
+
+        .modder_window{
+            display: block;
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+
+
+            width: 70vw;
+            max-width: 70vmin;
+            padding: 1vmin;
+            border-radius: 1vmin;
+            background: rgba(128,128,128,0.8);
+            box-shadow: 0 0 1vmin rgba(128,128,128,0.5);
+        }
+
+        .modder_window.hidden{
+            top: -100000%;
+        }
+
+        .monday1{grid-area: monday1;}
+        .monday2{grid-area: monday2;}
+        .monday3{grid-area: monday3;}
+        .monday4{grid-area: monday4;}
+        .monday5{grid-area: monday5;}
+        .monday6{grid-area: monday6;}
+        .monday7{grid-area: monday7;}
+        .tuesday1{grid-area: tuesday1;}
+        .tuesday2{grid-area: tuesday2;}
+        .tuesday3{grid-area: tuesday3;}
+        .tuesday4{grid-area: tuesday4;}
+        .tuesday5{grid-area: tuesday5;}
+        .tuesday6{grid-area: tuesday6;}
+        .tuesday7{grid-area: tuesday7;}
+        .wednesday1{grid-area: wednesday1;}
+        .wednesday2{grid-area: wednesday2;}
+        .wednesday3{grid-area: wednesday3;}
+        .wednesday4{grid-area: wednesday4;}
+        .wednesday5{grid-area: wednesday5;}
+        .wednesday6{grid-area: wednesday6;}
+        .wednesday7{grid-area: wednesday7;}
+        .thursday1{grid-area: thursday1;}
+        .thursday2{grid-area: thursday2;}
+        .thursday3{grid-area: thursday3;}
+        .thursday4{grid-area: thursday4;}
+        .thursday5{grid-area: thursday5;}
+        .thursday6{grid-area: thursday6;}
+        .thursday7{grid-area: thursday7;}
+        .friday1{grid-area: friday1;}
+        .friday2{grid-area: friday2;}
+        .friday3{grid-area: friday3;}
+        .friday4{grid-area: friday4;}
+        .friday5{grid-area: friday5;}
+        .friday6{grid-area: friday6;}
+        .friday7{grid-area: friday7;}
+
+        select {
+            -webkit-appearance: button;
+            -moz-appearance: button;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -webkit-padding-end: 20px;
+            -moz-padding-end: 20px;
+            -webkit-padding-start: 2px;
+            -moz-padding-start: 2px;
+            background-position: center right;
+            background-repeat: no-repeat;
+            border: 1px solid #AAA;
+            border-radius: 2px;
+            box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
+            font-size: inherit;
+            margin: 0;
+            overflow: hidden;
+            padding-top: 2px;
+            padding-bottom: 2px;
+            white-space: nowrap;
+        }
+
+        .modder_window > .options,.options_button{
+            background-color: #333333;
+            height: max(3vmin, 30px);
+            border-radius: 2px;
+            border: 1px solid #AAA;
+            box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
+            font-size: inherit;
+            overflow: hidden;
+            padding-top: 2px;
+            padding-bottom: 2px;
+            white-space: nowrap;
+        }
+
+        .modder_window > .options{
+            width: calc( 70% - 2px );
+        }
+
+        .modder_window > .options_button{
+            width: calc( 30% - 2px );
+            background-color: #333333;
+            border: none;
+            border-radius: 2px;
+            cursor: pointer;
+        }
+
+        .modder_window > .options_button:hover{
+            box-shadow: 0px 0px 1px 2px rgba(255,255,255,0.1) inset;
+        }
+
+        .editing_section > .editor_inputs{
+            width: calc( 70% - 2px );
+            display: inline-block;
+        }
+
+        .editing_section > .editor_inputs input{
+            width: 100%;
+            background-color: #333333;
+            height: max(3vmin, 30px);
+            border-radius: 2px;
+            border: none;
+            box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.1);
+            font-size: inherit;
+            overflow: hidden;
+            white-space: nowrap;
+            margin: 0px auto 2px auto;
+        }
+
+        .editing_section > .editor_inputs > input:invalid{
+            box-shadow: 0px 1px 1px rgba(255,0,0,0.5);
+        }
+
+        .editing_section .wrapper{
+            width: calc( 30% - 2px);
+            display: inline-block;
+        }
+
+        .save_button{
+            /*width: calc( 30% - 2px );*/
+            height: max(3vmin, 30px);
+            background-color: #333333;
+            border: none;
+            border-radius: 2px;
+            cursor: pointer;
+            margin-bottom: 2px;
+            font-size: inherit;
+
+            width: 100%;
+            margin-top: 5px;
+        }
+
+        .save_button:hover{
+            box-shadow: 0px 0px 1px 2px rgba(255,255,255,0.1) inset;
+        }
+
+        .editing_section label{
+            background: rgba(0,0,0,0.3);
+        }
+
+        .editing_section .editor_wrapper > .work{
+            background: #333;
+        }
+    </style>
+</head>
+<body>
+<div class="sound_prompt" onclick="changeSoundSettings(this)">
+    Sound
+</div>
+
+<div class="modify_plan" onclick="createNewLesson()">
+    Modify plan
+</div>
+
+<div class="modder_window hidden">
+    <div style="text-align: end">
+        <div style="display: inline-block; padding: 2px; border: 2px solid rgba(0,0,0,0.3); border-radius: 50%; cursor: pointer; width: 20px; height: 20px; line-height: 20px; text-align: center; margin-bottom: 2px"  onclick="document.getElementsByClassName('modder_window')[0].classList.add('hidden');">X</div>
+    </div>
+    <select class="options" name="Time" required autofocus style="-webkit-appearance: none; -moz-appearance: none; appearance: none; border: none">
+
+        <option value="no" selected>Choose time</option>
+
+        <option value="monday1">Monday 08:00 - 09:30</option>
+        <option value="monday2">Monday 09:35 - 11:05</option>
+        <option value="monday3">Monday 11:15 - 12:45</option>
+        <option value="monday4">Monday 12:50 - 14:20</option>
+        <option value="monday5">Monday 14:40 - 16:10</option>
+        <option value="monday6">Monday 16:15 - 17:45</option>
+        <option value="monday7">Monday 17:50 - 19:20</option>
+        <option disabled></option>
+
+        <option value="tuesday1">Tuesday 08:00 - 09:30</option>
+        <option value="tuesday2">Tuesday 09:35 - 11:05</option>
+        <option value="tuesday3">Tuesday 11:15 - 12:45</option>
+        <option value="tuesday4">Tuesday 12:50 - 14:20</option>
+        <option value="tuesday5">Tuesday 14:40 - 16:10</option>
+        <option value="tuesday6">Tuesday 16:15 - 17:45</option>
+        <option value="tuesday7">Tuesday 17:50 - 19:20</option>
+        <option disabled></option>
+
+        <option value="wednesday1">Wednesday 08:00 - 09:30</option>
+        <option value="wednesday2">Wednesday 09:35 - 11:05</option>
+        <option value="wednesday3">Wednesday 11:15 - 12:45</option>
+        <option value="wednesday4">Wednesday 12:50 - 14:20</option>
+        <option value="wednesday5">Wednesday 14:40 - 16:10</option>
+        <option value="wednesday6">Wednesday 16:15 - 17:45</option>
+        <option value="wednesday7">Wednesday 17:50 - 19:20</option>
+        <option disabled></option>
+
+        <option value="thursday1">Thursday 08:00 - 09:30</option>
+        <option value="thursday2">Thursday 09:35 - 11:05</option>
+        <option value="thursday3">Thursday 11:15 - 12:45</option>
+        <option value="thursday4">Thursday 12:50 - 14:20</option>
+        <option value="thursday5">Thursday 14:40 - 16:10</option>
+        <option value="thursday6">Thursday 16:15 - 17:45</option>
+        <option value="thursday7">Thursday 17:50 - 19:20</option>
+        <option disabled></option>
+
+        <option value="friday1">Friday 08:00 - 09:30</option>
+        <option value="friday2">Friday 09:35 - 11:05</option>
+        <option value="friday3">Friday 11:15 - 12:45</option>
+        <option value="friday4">Friday 12:50 - 14:20</option>
+        <option value="friday5">Friday 14:40 - 16:10</option>
+        <option value="friday6">Friday 16:15 - 17:45</option>
+        <option value="friday7">Friday 17:50 - 19:20</option>
+        
+    </select>
+    <button class="options_button" onclick="loadTheLesson()">
+        LOAD
+    </button>
+    <hr style="width:100%; margin: 1vmin auto">
+    <div class="editing_section hidden">
+        <div class="editor_inputs">
+            <label>Main Name<br>
+                <input type="text" class="name" name="name">
+            </label>
+            <label>Type<br>
+                <input type="text" class="type" name="type">
+            </label>
+            <label>Teacher Name<br>
+                <input type="text" class="person" name="person">
+            </label>
+            <label>Website Name - URL (you can leave them empty)<br>
+                <input type="text" class="place" name="place1" style="width: calc( 50% - 2px )">
+                <input type="url" class="website" name="website1" style="width: calc( 50% - 2px )">
+                <input type="text" class="place" name="place2" style="width: calc( 50% - 2px )">
+                <input type="url" class="website" name="website2" style="width: calc( 50% - 2px )">
+                <input type="text" class="place" name="place3" style="width: calc( 50% - 2px )">
+                <input type="url" class="website" name="website3" style="width: calc( 50% - 2px )">
+                <input type="text" class="place" name="place4" style="width: calc( 50% - 2px )">
+                <input type="url" class="website" name="website4" style="width: calc( 50% - 2px )">
+            </label>
+            <label>On which week (you can leave it empty)<br>
+                <input type="text" name="which_week">
+            </label>
+        </div>
+
+        <div class="wrapper">
+            <button class="save_button" onclick="saveTheWebsite()">
+                SAVE FILE
+            </button>
+
+            <hr style="margin: 10px">
+
+            <button class="save_button" onclick="deleteTheLessonSelected()">
+                DELETE
+            </button>
+
+            <button class="save_button" onclick="saveTheLesson()">
+                SAVE
+            </button>
+        </div>
+
+
+        <hr style="width:100%; margin: 1vmin auto">
+
+        <div class="editor_wrapper">
+
+        </div>
+
+    </div>
+
+</div>
+
+<div class="fullpage">
+
+    <div class="day">
+        Monday
+    </div>
+    
+    <div class="day">
+        Tuesday
+    </div>
+
+    <div class="day">
+        Wednesday
+    </div>
+
+    <div class="day">
+        Thursday
+    </div>
+
+    <div class="day">
+        Friday
+    </div>
+
+</div>
+</body>
+</html>
