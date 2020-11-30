@@ -63,7 +63,8 @@
             var okienko_edycji = document.getElementsByClassName("modder_window")[0];
             var wartosc_wyboru = okienko_edycji.getElementsByClassName("options")[0].value;
             if(wartosc_wyboru !== "no"){
-                var lekcja = document.getElementsByClassName(wartosc_wyboru)[0];
+                const workspace = document.getElementsByClassName("fullpage")[0];
+                var lekcja = workspace.getElementsByClassName(wartosc_wyboru)[0];
                 var formularz_edycji = okienko_edycji.getElementsByClassName("editor_inputs")[0];
                 
                 clearEditorInputs(formularz_edycji);
@@ -86,7 +87,7 @@
                     var link = lista_linkow[i];
                     if(link === "") continue;
                     link_dzielony = link.trim().split(": ");
-                    if(link_dzielony.length < 2) alert("Error during loading in links" + link + " Lista linków : " + lista_linkow + " | " + lista_linkow.length);
+                    if(link_dzielony.length < 2) alert("Error during loading links" + link + ". Read values | length : " + lista_linkow + " | " + lista_linkow.length);
                     var nazwa = link_dzielony[0];
                     var adres = "";
                     if(link_dzielony[1] !== undefined){
@@ -141,7 +142,13 @@
                 for(var k=0; k<4; k++){
                     var temp_temp = formularz_edycji.getElementsByClassName("place")[k].value;
                     if(temp_temp !== ""){
-                        newLesson += temp_temp + ": " + '<a target="_blank" href="' + formularz_edycji.getElementsByClassName("website")[k].value + '">' + formularz_edycji.getElementsByClassName("website")[k].value.replace(/(^\w+:|^)\/\//, '').substring(0,25) + '(...)' + '</a>' + "<br>";
+                        if(formularz_edycji.getElementsByClassName("website")[k].value != ""){
+                            newLesson += temp_temp + ": " + '<a target="_blank" href="' + formularz_edycji.getElementsByClassName("website")[k].value + '">' + formularz_edycji.getElementsByClassName("website")[k].value.replace(/(^\w+:|^)\/\//, '').substring(0,25) + '(...)' + '</a>' + "<br>";
+                        }
+                        else{
+                            newLesson += temp_temp + "<br>";
+                        }
+
                     }
                 }
                 newLesson += '\
@@ -236,7 +243,7 @@
 
                 let temp = document.getElementsByClassName(lessonToActivateName);
 
-                if (lessonToActivateName !== lessonToDeactivateName || (temp[0]!== null && !temp[0].classList.contains("active"))) {
+                if (lessonToActivateName !== lessonToDeactivateName || (temp !== undefined && temp[0]!== null && !temp[0].classList.contains("active"))) {
                     if (lessonToDeactivateName != null) {
                         toErase = document.getElementsByClassName(lessonToDeactivateName)[0];
                         if (toErase !== undefined) {
@@ -356,6 +363,8 @@
             font-size: max( 0.6vw, 12px );
             margin-top: 2px;
             text-align: center;
+            overflow-wrap: break-word;
+            overflow-wrap: anywhere;
         }
 
         .work.active::after {
