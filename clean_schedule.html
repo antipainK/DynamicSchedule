@@ -576,6 +576,16 @@
         .editing_section .editor_wrapper > .work{
             background: #333;
         }
+
+        @media only screen and (max-width: 600px) and (orientation: portrait){
+            html, body{
+                max-height: 100%;
+                overflow-y: auto !important;
+                max-width: 100%;
+                overflow-x: auto !important;
+            }
+        }
+
     </style>
 </head>
 <body>
