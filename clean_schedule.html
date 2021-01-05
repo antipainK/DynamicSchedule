@@ -8,6 +8,14 @@
 
     <script type="text/javascript">
 
+        if(typeof(String.prototype.trim) === "undefined")
+        {
+            String.prototype.trim = function()
+            {
+                return String(this).replace(/^\s+|\s+$/g, '');
+            };
+        }
+
         let soundOn = false;
 
         function saveTheWebsite() {
@@ -35,7 +43,14 @@
             }
         }
 
-        const times = ["", "8:00 - 9:30 ", "9:35 - 11:05 ", "11:15 - 12:45 ", "12:50 - 14:20 ", "14:40 - 16:10 ", "16:15 - 17:45 ", "17:50 - 19:20 "];
+
+        /*
+        * Here you can define timestamps.
+        * You can provide maximum of 12 timestamps.
+        * First element in this list should be an empty string "" (and it doesn't count towards 12 timestamps.
+        * */
+        const times = ["", "8:00 - 9:30", "9:35 - 11:05", "11:15 - 12:45", "12:50 - 14:20", "14:40 - 16:10", "16:15 - 17:45", "17:50 - 19:20"];
+
 
         async function createNewLesson(){
             okienko = document.getElementsByClassName("modder_window")[0];
@@ -151,12 +166,7 @@
 
                     }
                 }
-                newLesson += '\
-                    </div>\
-                        <div class="time">\
-                            ' + times[wartosc_wyboru[wartosc_wyboru.length-1]] + formularz_edycji.querySelector('[name="which_week"]').value + '\
-                        </div>\
-                    </div>';
+                newLesson += '</div><div class="time">' + ( times[wartosc_wyboru[wartosc_wyboru.length-1]] + " " + formularz_edycji.querySelector('[name="which_week"]').value ).trim() + '</div></div>';
 
                 lessonScope.innerHTML += newLesson;
             }
