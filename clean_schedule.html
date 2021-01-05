@@ -296,19 +296,9 @@
 
             display: inline-grid;
             grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
-            grid-template-rows: 30px repeat(7, 1fr);
+            grid-template-rows: 30px repeat(2, 1fr);
+            grid-auto-rows: 1fr;
             grid-gap: 10px;
-
-            grid-template-areas:
-                "day day day day day"
-                "monday1 tuesday1 wednesday1 thursday1 friday1"
-                "monday2 tuesday2 wednesday2 thursday2 friday2"
-                "monday3 tuesday3 wednesday3 thursday3 friday3"
-                "monday4 tuesday4 wednesday4 thursday4 friday4"
-                "monday5 tuesday5 wednesday5 thursday5 friday5"
-                "monday6 tuesday6 wednesday6 thursday6 friday6"
-                "monday7 tuesday7 wednesday7 thursday7 friday7";
-
         }
         @media screen and (max-width: 1000px){
             .fullpage{
@@ -437,41 +427,71 @@
             top: -100000%;
         }
 
-        .monday1{grid-area: monday1;}
-        .monday2{grid-area: monday2;}
-        .monday3{grid-area: monday3;}
-        .monday4{grid-area: monday4;}
-        .monday5{grid-area: monday5;}
-        .monday6{grid-area: monday6;}
-        .monday7{grid-area: monday7;}
-        .tuesday1{grid-area: tuesday1;}
-        .tuesday2{grid-area: tuesday2;}
-        .tuesday3{grid-area: tuesday3;}
-        .tuesday4{grid-area: tuesday4;}
-        .tuesday5{grid-area: tuesday5;}
-        .tuesday6{grid-area: tuesday6;}
-        .tuesday7{grid-area: tuesday7;}
-        .wednesday1{grid-area: wednesday1;}
-        .wednesday2{grid-area: wednesday2;}
-        .wednesday3{grid-area: wednesday3;}
-        .wednesday4{grid-area: wednesday4;}
-        .wednesday5{grid-area: wednesday5;}
-        .wednesday6{grid-area: wednesday6;}
-        .wednesday7{grid-area: wednesday7;}
-        .thursday1{grid-area: thursday1;}
-        .thursday2{grid-area: thursday2;}
-        .thursday3{grid-area: thursday3;}
-        .thursday4{grid-area: thursday4;}
-        .thursday5{grid-area: thursday5;}
-        .thursday6{grid-area: thursday6;}
-        .thursday7{grid-area: thursday7;}
-        .friday1{grid-area: friday1;}
-        .friday2{grid-area: friday2;}
-        .friday3{grid-area: friday3;}
-        .friday4{grid-area: friday4;}
-        .friday5{grid-area: friday5;}
-        .friday6{grid-area: friday6;}
-        .friday7{grid-area: friday7;}
+        .monday1{grid-area: 2 / 1 / span 1 / span 1;}
+        .monday2{grid-area: 3 / 1 / span 1 / span 1;}
+        .monday3{grid-area: 4 / 1 / span 1 / span 1;}
+        .monday4{grid-area: 5 / 1 / span 1 / span 1;}
+        .monday5{grid-area: 6 / 1 / span 1 / span 1;}
+        .monday6{grid-area: 7 / 1 / span 1 / span 1;}
+        .monday7{grid-area: 8 / 1 / span 1 / span 1;}
+        .monday8{grid-area: 9 / 1 / span 1 / span 1;}
+        .monday9{grid-area: 10 / 1 / span 1 / span 1;}
+        .monday10{grid-area: 11 / 1 / span 1 / span 1;}
+        .monday11{grid-area: 12 / 1 / span 1 / span 1;}
+        .monday12{grid-area: 13 / 1 / span 1 / span 1;}
+
+        .tuesday1{grid-area: 2 / 2 / span 1 / span 1;}
+        .tuesday2{grid-area: 3 / 2 / span 1 / span 1;}
+        .tuesday3{grid-area: 4 / 2 / span 1 / span 1;}
+        .tuesday4{grid-area: 5 / 2 / span 1 / span 1;}
+        .tuesday5{grid-area: 6 / 2 / span 1 / span 1;}
+        .tuesday6{grid-area: 7 / 2 / span 1 / span 1;}
+        .tuesday7{grid-area: 8 / 2 / span 1 / span 1;}
+        .tuesday8{grid-area: 9 / 2 / span 1 / span 1;}
+        .tuesday9{grid-area: 10 / 2 / span 1 / span 1;}
+        .tuesday10{grid-area: 11 / 2 / span 1 / span 1;}
+        .tuesday11{grid-area: 12 / 2 / span 1 / span 1;}
+        .tuesday12{grid-area: 13 / 2 / span 1 / span 1;}
+        
+        .wednesday1{grid-area: 2 / 3 / span 1 / span 1;}
+        .wednesday2{grid-area: 3 / 3 / span 1 / span 1;}
+        .wednesday3{grid-area: 4 / 3 / span 1 / span 1;}
+        .wednesday4{grid-area: 5 / 3 / span 1 / span 1;}
+        .wednesday5{grid-area: 6 / 3 / span 1 / span 1;}
+        .wednesday6{grid-area: 7 / 3 / span 1 / span 1;}
+        .wednesday7{grid-area: 8 / 3 / span 1 / span 1;}
+        .wednesday8{grid-area: 9 / 3 / span 1 / span 1;}
+        .wednesday9{grid-area: 10 / 3 / span 1 / span 1;}
+        .wednesday10{grid-area: 11 / 3 / span 1 / span 1;}
+        .wednesday11{grid-area: 12 / 3 / span 1 / span 1;}
+        .wednesday12{grid-area: 13 / 3 / span 1 / span 1;}
+
+        .thursday1{grid-area: 2 / 4 / span 1 / span 1;}
+        .thursday2{grid-area: 3 / 4 / span 1 / span 1;}
+        .thursday3{grid-area: 4 / 4 / span 1 / span 1;}
+        .thursday4{grid-area: 5 / 4 / span 1 / span 1;}
+        .thursday5{grid-area: 6 / 4 / span 1 / span 1;}
+        .thursday6{grid-area: 7 / 4 / span 1 / span 1;}
+        .thursday7{grid-area: 8 / 4 / span 1 / span 1;}
+        .thursday8{grid-area: 9 / 4 / span 1 / span 1;}
+        .thursday9{grid-area: 10 / 4 / span 1 / span 1;}
+        .thursday10{grid-area: 11 / 4 / span 1 / span 1;}
+        .thursday11{grid-area: 12 / 4 / span 1 / span 1;}
+        .thursday12{grid-area: 13 / 4 / span 1 / span 1;}
+
+        .friday1{grid-area: 2 / 5 / span 1 / span 1;}
+        .friday2{grid-area: 3 / 5 / span 1 / span 1;}
+        .friday3{grid-area: 4 / 5 / span 1 / span 1;}
+        .friday4{grid-area: 5 / 5 / span 1 / span 1;}
+        .friday5{grid-area: 6 / 5 / span 1 / span 1;}
+        .friday6{grid-area: 7 / 5 / span 1 / span 1;}
+        .friday7{grid-area: 8 / 5 / span 1 / span 1;}
+        .friday8{grid-area: 9 / 5 / span 1 / span 1;}
+        .friday9{grid-area: 10 / 5 / span 1 / span 1;}
+        .friday10{grid-area: 11 / 5 / span 1 / span 1;}
+        .friday11{grid-area: 12 / 5 / span 1 / span 1;}
+        .friday12{grid-area: 13 / 5 / span 1 / span 1;}
+
 
         select {
             -webkit-appearance: button;
