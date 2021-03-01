@@ -55,6 +55,7 @@
         * */
         const times = ["8:00 - 9:30", "9:35 - 11:05", "11:15 - 12:45", "12:50 - 14:20", "14:40 - 16:10", "16:15 - 17:45"];
 
+
         const dayNames = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
 
         let lessons = [[]];
@@ -311,7 +312,8 @@
 
                 function deactivateLesson(){
                     if(lessonToDeactivateName != null){
-                        let lessonToDeactivate = document.getElementsByClassName(lessonToDeactivateName)[0];
+                        let workspace = document.getElementsByClassName("fullpage")[0];
+                        let lessonToDeactivate = workspace.getElementsByClassName(lessonToDeactivateName)[0];
                         if(lessonToDeactivate !== undefined){ lessonToDeactivate.classList.remove("active"); }
                         lessonToDeactivateName = null;
                     }
@@ -319,7 +321,8 @@
 
                 function activateLesson(){
                     if(lessonToActivateName != null){
-                        let lessonToActivate = document.getElementsByClassName(lessonToActivateName)[0];
+                        let workspace = document.getElementsByClassName("fullpage")[0];
+                        let lessonToActivate = workspace.getElementsByClassName(lessonToActivateName)[0];
                         if(lessonToActivate !== undefined){ lessonToActivate.classList.add("active"); }
                     }
                 }
