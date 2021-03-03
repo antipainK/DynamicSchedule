@@ -54,6 +54,8 @@
         * You can provide maximum of 12 timestamps.
         * */
         const times = ["8:00 - 9:30", "9:35 - 11:05", "11:15 - 12:45", "12:50 - 14:20", "14:40 - 16:10", "16:15 - 17:45"];
+        //const times = ["7:10 - 7:55", "8:00 - 8:45", "8:50 - 9:35", "9:40 - 10:25", "10:30 - 11:15", "11:20 - 12:05", "12:20 - 13:05", "13:20 - 14:05", "14:10 - 14:55", "16:55 - 18:25"];
+
 
 
         const dayNames = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
@@ -323,15 +325,20 @@
                     if(lessonToActivateName != null){
                         let workspace = document.getElementsByClassName("fullpage")[0];
                         let lessonToActivate = workspace.getElementsByClassName(lessonToActivateName)[0];
-                        if(lessonToActivate !== undefined){ lessonToActivate.classList.add("active"); }
+                        if(lessonToActivate !== undefined){
+                            lessonToActivate.classList.add("active");
+                            return true;
+                        }
                     }
+                    return false;
                 }
 
                 if(lessonToActivateName !== currentDayName){    // So we succesfully added number coresponding to the lesson
                     if(lessonToActivateName !== lessonToDeactivateName){    // We don't want to activate same lesson twice in a row
                         deactivateLesson();
-                        activateLesson();
-                        if(soundOn) notificationSound.play();
+                        if( activateLesson() ){
+                            if(soundOn) notificationSound.play();
+                        }
                     }
                 }
                 else{       // So there wasn't any lesson to be activated
@@ -777,8 +784,8 @@
 
 
 </div>
-</body>
 <script>
     populateSelectLessonWindow();
 </script>
+</body>
 </html>
