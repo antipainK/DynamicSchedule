@@ -19,6 +19,10 @@
         let soundOn = false;
 
         function saveTheWebsite() {
+            for(let element of document.getElementsByClassName("active")){
+                element.classList.remove("active");
+            }
+            document.getElementsByClassName("sound_prompt")[0].classList.remove("on");
             document.getElementsByClassName('modder_window')[0].classList.add('hidden');
             soundOn = false;
 
