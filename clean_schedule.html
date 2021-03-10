@@ -32,6 +32,7 @@
             a.href = URL.createObjectURL(blob);
             a.download = "myOwnSchedule.html";
             a.hidden = true;
+            a.classList.add("toBeRemoved");
             document.body.appendChild(a);
             a.innerHTML = "Download Website";
             a.click();
@@ -243,7 +244,20 @@
             }
         }
 
+        function clearWronglySavedWebsite(){
+            for(let element of document.getElementsByClassName("active")){
+                element.classList.remove("active");
+            }
+            for(let element of document.getElementsByClassName("toBeRemoved")){
+                element.remove();
+            }
+            document.getElementsByClassName("sound_prompt")[0].classList.remove("on");
+            document.getElementsByClassName('modder_window')[0].classList.add('hidden');
+        }
+
         async function checkTime() {
+            clearWronglySavedWebsite();
+
             let currentDayName;
             let lessonToActivateName = null;
             let currentTimeLocal;
