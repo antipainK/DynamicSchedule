@@ -26,6 +26,11 @@
             document.getElementsByClassName('modder_window')[0].classList.add('hidden');
             soundOn = false;
 
+            let optionsToDelete = document.getElementById("selectLessonWindow").getElementsByTagName("option");
+            for(let i=optionsToDelete.length -1; i>=0; i--){
+                if(optionsToDelete[i].value !== "no") optionsToDelete[i].remove();
+            }
+
             var htmlContent = ["<!DOCTYPE html>\n" + "<html lang=\"en\">\n" + document.getElementsByTagName("html")[0].innerHTML];
             var blob = new Blob(htmlContent, {type: "text/html"});
             var a = document.createElement("a");
